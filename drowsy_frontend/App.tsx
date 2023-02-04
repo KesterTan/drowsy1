@@ -5,7 +5,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import Home from './src/screens/Home';
 import Alarm from './src/screens/Alarm';
 import Profile from './src/screens/Profile';
-import CameraDisplay from './src/screens/Camera';
+import CameraDisplay from './src/screens/CameraDisplay';
 import Dashboard from './src/screens/Dashboard';
 import { NavigationContainer } from "@react-navigation/native";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
