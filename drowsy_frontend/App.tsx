@@ -92,7 +92,7 @@ export default function App() {
                 />
                 <Tab.Screen 
                     name="Dashboard" 
-                    component={Dashboard}
+                    component={Profile}
                     options={{
                         tabBarLabel: 'Profile',
                         tabBarIcon: ({ color, size }) => (
