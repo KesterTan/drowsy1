@@ -5,8 +5,8 @@ interface Props {
   filePath: string;
 }
 const Home: React.FC<Props> = ({ filePath }) => {
+  filePath = "assets/linegraph.jpeg"
   const [imageSrc, setImageSrc] = useState('');
-  filePath = "Users/andrewcheng/drowsy1/drowsy_frontend/assets/linegraph.jpeg"
 
   React.useEffect(() => {
     setImageSrc(URL.createObjectURL(new Blob([filePath])));
@@ -17,6 +17,6 @@ const Home: React.FC<Props> = ({ filePath }) => {
       <img src={imageSrc} alt="Image" />
     </div>
   );
-};
+}; 
 
 export default Home;
