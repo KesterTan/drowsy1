@@ -49,8 +49,9 @@ const CameraDisplay = () => {
           if (fileName) {
             const fileType = fileName.split(".").pop();
             const formData = new FormData();
+            const uri = result.uri;
             formData.append("file", {
-              uri: result.uri,
+              uri: uri,
               name: fileName,
               type: `video/${fileType}`,
             });
@@ -78,21 +79,22 @@ const CameraDisplay = () => {
       : ((route = "/video"), (content_type = "video/mp4"));
       url = schema + host + ":" + port + route;
 
-      let response = await FS.uploadAsync(url, mediaFile.uri, {
-        headers: {
-          "content-type": content_type,
-        },
-        httpMethod: "POST",
-        uploadType: FS.FileSystemUploadType.BINARY_CONTENT,
-      });
-  
-      console.log(response.headers);
-      console.log(response.body);
-
+      if (url != null) {
+        let response = await FS.uploadAsync(url, mediaFile.uri, {
+          headers: {
+            "content-type": content_type,
+          },
+          httpMethod: "POST",
+          uploadType: FS.FileSystemUploadType.BINARY_CONTENT,
+        });
+            
+        console.log(response.headers);
+        console.log(response.body);
+      }  
     }
     
     return (
-    <View style={styles.container}>
+      <View style={styles.container}>
       <Camera style={styles.camera} type={type}
       ref={ref => {
         setCameraRef(ref)}}>
@@ -101,12 +103,15 @@ const CameraDisplay = () => {
             <Text style={styles.text}>Flip Camera</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={recordVideo} style={{
-            borderWidth: 2,
-            borderRadius: 25,
-            borderColor: recording ? "blue" : "red",
-            height: 40,
-            width: 40,
-            backgroundColor: recording ? "blue" : "red",
+            height: recording ? 60 : 80,
+            width: recording ? 60 : 80,
+            justifyContent: "center",
+            alignSelf: "flex-end",
+            alignItems: "center",
+            borderRadius: recording ? 0 : 100, 
+            marginLeft: recording ? "16%" : "13%",
+            marginBottom: recording ? "3%" : "0%",
+            backgroundColor: "#CF6461",
           }} 
           />
         </View>
