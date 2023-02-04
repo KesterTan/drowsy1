@@ -1,25 +1,27 @@
-import React, {useState} from 'react'
-import { SafeAreaView } from 'react-native'
-// import {View} from 'react-native'
+// import React, {useState} from 'react'
+// import { SafeAreaView } from 'react-native'
+// import { Avatar, Button, DataTable, Text, TextInput } from "react-native-paper";
 
-interface Props {
-  filePath: string;
-}
-const Home: React.FC<Props> = ({ filePath }) => {
-  filePath = "/assets/linegraph.jpeg"
-  const [imageSrc, setImageSrc] = useState('');
+// // import {View} from 'react-native'
 
-  React.useEffect(() => {
-    setImageSrc(URL.createObjectURL(new Blob([filePath])));
-  }, [filePath]);
+// interface Props {
+//   filePath: string;
+// }
+// const Home: React.FC<Props> = ({ filePath }) => {
+//   filePath = "/assets/linegraph.jpeg"
+//   const [imageSrc, setImageSrc] = useState('');
 
-  return (
-    <SafeAreaView>
-       <div>
-        <img src={imageSrc} alt="Image" />
-      </div>
-    </SafeAreaView> 
-  );
-}; 
+//   React.useEffect(() => {
+//     setImageSrc(URL.createObjectURL(new Blob([filePath])));
+//   }, [filePath]);
 
-export default Home;
+//   return (
+//     <SafeAreaView>
+//        <div>
+//         <img src={imageSrc} alt="Image" />
+//       </div>
+//     </SafeAreaView> 
+//   );
+// }; 
+// // https://freeimage.host/i/H1UWzej
+// export default Home;
