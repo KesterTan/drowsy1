@@ -8,23 +8,15 @@ import * as FS from "expo-file-system";
 const CameraDisplay = () => {
     const [type, setType] = useState(CameraType.back);
     const [cameraPermission, setCameraPermission] = useState(false);
-    const [record, setRecord] = useState(false);
-    const cameraRef = useRef()
+    const [recording, setRecording] = useState(false);
+    // const cameraRef = useRef()
+    const [ cameraRef, setCameraRef ] = useState<Camera | null>(null)
 
-    const permisionFunction = async () => {
-        const { status } = await Camera.requestCameraPermissionsAsync();
-    
-        setCameraPermission(status === "granted");
-    
-        if (
-          !cameraPermission
-        ) {
-          return(<Text>Permission for camera required</Text>);
-        }
-    };
-    
     useEffect(() => {
-    permisionFunction();
+      (async () => {
+        const { status } = await Camera.requestCameraPermissionsAsync();
+        setCameraPermission(status === "granted");
+      })();
     }, []);
 
     function toggleCameraType() {
@@ -40,34 +32,39 @@ const CameraDisplay = () => {
     //}
 
     let recordVideo = async () => {
-        if (cameraRef != null) {
-          if (record) {
-            console.log("inside");
-            setRecord(true);
-            const result = await cameraRef.current.recordAsync();
-            const imgData = await FS.readAsStringAsync(result.uri, {
-              encoding: FS.EncodingType.Base64,
+      // if (!cameraRef) {console.log("false"); return}
+      // setRecord(true);
+      // console.log("inside");
+      // const result = await cameraRef.recordAsync();;
+      if (!cameraRef) {console.log("false"); return}
+        if (!recording) {
+          setRecording(true);
+          let result = await cameraRef.recordAsync();
+          console.log("video", result);
+          const imgData = await FS.readAsStringAsync(result.uri, {
+            encoding: FS.EncodingType.Base64,
+          });
+          const fileName = result.uri.split("/").pop();
+    
+          if (fileName) {
+            const fileType = fileName.split(".").pop();
+            const formData = new FormData();
+            formData.append("file", {
+              uri: result.uri,
+              name: fileName,
+              type: `video/${fileType}`,
             });
-            const fileName = result.uri.split("/").pop();
-            if (fileName) {
-              const fileType = fileName.split(".").pop();
-              const formData = new FormData();
-              formData.append("file", {
-                uri: result.uri,
-                name: fileName,
-                type: `video/${fileType}`,
-              });
-              console.log(formData);
-              toServer(formData);
-            }
-          }
-          console.log("not recording bitch");
+            // console.log(formData);
+            toServer(formData);
+          } 
         } else {
-          console.log("false f uck");
+          setRecording(false);
+          cameraRef.stopRecording();
         }
-      }
+    }
       
     const toServer = async (mediaFile) => {
+      // console.log("inside")
       console.log(mediaFile);
       let type = mediaFile.type;
       let schema = "http://";
@@ -96,12 +93,22 @@ const CameraDisplay = () => {
     
     return (
     <View style={styles.container}>
-      <Camera style={styles.camera} type={type}>
+      <Camera style={styles.camera} type={type}
+      ref={ref => {
+        setCameraRef(ref)}}>
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.flipButton} onPress={toggleCameraType}>
             <Text style={styles.text}>Flip Camera</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={recordVideo} style={styles.recButton} />
+          <TouchableOpacity onPress={recordVideo} style={{
+            borderWidth: 2,
+            borderRadius: 25,
+            borderColor: recording ? "blue" : "red",
+            height: 40,
+            width: 40,
+            backgroundColor: recording ? "blue" : "red",
+          }} 
+          />
         </View>
       </Camera>
     </View>
@@ -144,7 +151,6 @@ const styles = StyleSheet.create({
       alignItems: "center",
       borderRadius: 100 , 
       marginLeft:"13%",
-      backgroundColor: "#AB5350",
     },
     recInProgressButton: {
       height: 60,
