@@ -7,6 +7,7 @@ import Alarm from './src/screens/Alarm';
 import Profile from './src/screens/Profile';
 import Dashboard from './src/screens/Dashboard';
 import { NavigationContainer } from "@react-navigation/native";
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const Tab = createBottomTabNavigator();
 
@@ -68,10 +69,36 @@ export default function App() {
     return ( 
         <NavigationContainer>
             <Tab.Navigator>
-                <Tab.Screen name="Home" component={Home}></Tab.Screen>
-                <Tab.Screen name="Alarm" component={Alarm}></Tab.Screen>
-                <Tab.Screen name="Profile" component={Profile}></Tab.Screen>
-                <Tab.Screen name="Dashboard" component={Dashboard}></Tab.Screen>
+                <Tab.Screen 
+                    name="Home" 
+                    component={Home}
+                    options={{
+                        tabBarLabel: 'Home',
+                        tabBarIcon: ({ color, size }) => (
+                            <MaterialCommunityIcons name="home" color={color} size={size} />
+                        ),
+                        }}
+                />
+                <Tab.Screen 
+                    name="Alarm" 
+                    component={Alarm}
+                    options={{
+                        tabBarLabel: 'Alarm',
+                        tabBarIcon: ({ color, size }) => (
+                          <MaterialCommunityIcons name="bell" color={color} size={size} />
+                        )
+                    }}
+                />
+                <Tab.Screen 
+                    name="Dashboard" 
+                    component={Dashboard}
+                    options={{
+                        tabBarLabel: 'Profile',
+                        tabBarIcon: ({ color, size }) => (
+                          <MaterialCommunityIcons name="account" color={color} size={size} />
+                        ),
+                      }}
+                />
             </Tab.Navigator>
         </NavigationContainer>
     );

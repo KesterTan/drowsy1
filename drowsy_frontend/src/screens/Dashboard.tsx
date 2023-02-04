@@ -3,7 +3,7 @@ import {View} from 'react-native'
 
 const Dashboard = () => {
   return (
-    <View>Dashboard</View>
+    <View></View>
   )
 }
 

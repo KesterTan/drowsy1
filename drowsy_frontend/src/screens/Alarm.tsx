@@ -3,7 +3,7 @@ import {View} from 'react-native'
 
 const Alarm = () => {
   return (
-    <View>Alarm</View>
+    <View></View>
   )
 }
 
