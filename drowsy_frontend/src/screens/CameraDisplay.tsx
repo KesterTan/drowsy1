@@ -8,8 +8,8 @@ import * as FS from "expo-file-system";
 const CameraDisplay = () => {
     const [type, setType] = useState(CameraType.back);
     const [cameraPermission, setCameraPermission] = useState(false);
-    const [cameraRef, setCameraRef ] = useState<Camera | null>(null);
     const [record, setRecord] = useState(false);
+    const cameraRef = useRef()
 
     const permisionFunction = async () => {
         const { status } = await Camera.requestCameraPermissionsAsync();
@@ -39,28 +39,32 @@ const CameraDisplay = () => {
     //  }
     //}
 
-    const recordVideo = async () => {
-      if (cameraRef) {
-        if (!record) {
-          setRecord(true);
-          const result = await cameraRef.recordAsync();
-          const imgData = await FS.readAsStringAsync(result.uri, {
-            encoding: FS.EncodingType.Base64,
-          });
-          const fileName = result.uri.split("/").pop();
-          if (fileName) {
-            const fileType = fileName.split(".").pop();
-            const formData = new FormData();
-            formData.append("file", {
-              uri: result.uri,
-              name: fileName,
-              type: `video/${fileType}`,
+    let recordVideo = async () => {
+        if (cameraRef != null) {
+          if (record) {
+            console.log("inside");
+            setRecord(true);
+            const result = await cameraRef.current.recordAsync();
+            const imgData = await FS.readAsStringAsync(result.uri, {
+              encoding: FS.EncodingType.Base64,
             });
-            console.log(formData);
-            toServer(formData);
+            const fileName = result.uri.split("/").pop();
+            if (fileName) {
+              const fileType = fileName.split(".").pop();
+              const formData = new FormData();
+              formData.append("file", {
+                uri: result.uri,
+                name: fileName,
+                type: `video/${fileType}`,
+              });
+              console.log(formData);
+              toServer(formData);
+            }
           }
+          console.log("not recording bitch");
+        } else {
+          console.log("false f uck");
         }
-      } 
       }
       
     const toServer = async (mediaFile) => {

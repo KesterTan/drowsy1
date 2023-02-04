@@ -34,5 +34,5 @@ def video():
         return "Video read"
 
 
-if __name__ == "__main__":
-    app.run("172.26.29.33", "19000")
+# if __name__ == "__main__":
+#     app.run("172.26.29.33")
