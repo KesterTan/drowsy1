@@ -2,13 +2,14 @@ import React, { useEffect, useState, useRef } from 'react'
 import { Camera, CameraType } from 'expo-camera';
 import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { ImageType } from 'expo-camera/build/Camera.types';
+import * as FS from "expo-file-system";
 
 
 const CameraDisplay = () => {
     const [type, setType] = useState(CameraType.back);
     const [cameraPermission, setCameraPermission] = useState(false);
     const [cameraRef, setCameraRef ] = useState<Camera | null>(null);
-    const [record, setRecord] = useState(null);
+    const [record, setRecord] = useState(false);
 
     const permisionFunction = async () => {
         const { status } = await Camera.requestCameraPermissionsAsync();
@@ -39,12 +40,54 @@ const CameraDisplay = () => {
     //}
 
     const recordVideo = async () => {
-      isRecording(true);
-    };
+      if (cameraRef) {
+        if (!record) {
+          setRecord(true);
+          const result = await cameraRef.recordAsync();
+          const imgData = await FS.readAsStringAsync(result.uri, {
+            encoding: FS.EncodingType.Base64,
+          });
+          const fileName = result.uri.split("/").pop();
+          if (fileName) {
+            const fileType = fileName.split(".").pop();
+            const formData = new FormData();
+            formData.append("file", {
+              uri: result.uri,
+              name: fileName,
+              type: `video/${fileType}`,
+            });
+            console.log(formData);
+            toServer(formData);
+          }
+        }
+      } 
+      }
+      
+    const toServer = async (mediaFile) => {
+      console.log(mediaFile);
+      let type = mediaFile.type;
+      let schema = "http://";
+      let host = "192.168.1.6";
+      let route = "";
+      let port = "5000";
+      let url = "";
+      let content_type = "";
+      type === "image"
+      ? ((route = "/image"), (content_type = "image/jpeg"))
+      : ((route = "/video"), (content_type = "video/mp4"));
+      url = schema + host + ":" + port + route;
 
-    const stopRecording = () => {
-      isRecording(false);
-      cameraRef.current.stopRecording()
+      let response = await FS.uploadAsync(url, mediaFile.uri, {
+        headers: {
+          "content-type": content_type,
+        },
+        httpMethod: "POST",
+        uploadType: FS.FileSystemUploadType.BINARY_CONTENT,
+      });
+  
+      console.log(response.headers);
+      console.log(response.body);
+
     }
     
     return (
@@ -54,7 +97,7 @@ const CameraDisplay = () => {
           <TouchableOpacity style={styles.flipButton} onPress={toggleCameraType}>
             <Text style={styles.text}>Flip Camera</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={toggleVideo} style={styles.recButton} />
+          <TouchableOpacity onPress={recordVideo} style={styles.recButton} />
         </View>
       </Camera>
     </View>
