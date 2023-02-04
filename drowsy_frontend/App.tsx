@@ -5,6 +5,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import Home from './src/screens/Home';
 import Alarm from './src/screens/Alarm';
 import Profile from './src/screens/Profile';
+import CameraDisplay from './src/screens/Camera';
 import Dashboard from './src/screens/Dashboard';
 import { NavigationContainer } from "@react-navigation/native";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -80,12 +81,12 @@ export default function App() {
                         }}
                 />
                 <Tab.Screen 
-                    name="Alarm" 
-                    component={Alarm}
+                    name="Scan" 
+                    component={CameraDisplay}
                     options={{
-                        tabBarLabel: 'Alarm',
+                        tabBarLabel: 'Scan',
                         tabBarIcon: ({ color, size }) => (
-                          <MaterialCommunityIcons name="bell" color={color} size={size} />
+                          <MaterialCommunityIcons name="scan-helper" color={color} size={size} />
                         )
                     }}
                 />
