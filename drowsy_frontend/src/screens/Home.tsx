@@ -1,10 +1,22 @@
-import React from 'react'
-import {View} from 'react-native'
+import React, {useState} from 'react'
+// import {View} from 'react-native'
 
-const Home = () => {
-  return (
-    <View></View>
-  )
+interface Props {
+  filePath: string;
 }
+const Home: React.FC<Props> = ({ filePath }) => {
+  const [imageSrc, setImageSrc] = useState('');
+  filePath = "Users/andrewcheng/drowsy1/drowsy_frontend/assets/linegraph.jpeg"
 
-export default Home
+  React.useEffect(() => {
+    setImageSrc(URL.createObjectURL(new Blob([filePath])));
+  }, [filePath]);
+
+  return (
+    <div>
+      <img src={imageSrc} alt="Image" />
+    </div>
+  );
+};
+
+export default Home;
